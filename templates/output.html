@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Computer Visions</title>
+    <link rel="stylesheet" type="text/css" href="static/main.css">
+    <style>
+
+
+button{
+  
+  margin-left:40px;
+      }
+
+    </style>
+    </head>
+    <body>
+<div>
+    <div>
+    <h1>Cloudinary's computer vision saw:</h1>
+    </div>
+
+    <h1> People </h1>
+    <div class="cards-container ">
+        {% for i in range(0, num) %}
+        {% if identities[i] == 1 %}
+          <div class="card card-fixedsize">
+
+            <div style="text-align:center">
+            <h2>{{titles[i]}}</h2>
+            </div>
+            <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
+            <figure>
+              <img style="width:230px;" src="{{urls[i]}}">
+              <figcaption>Original</figcaption>
+            </figure>
+            <figure>
+              <img style="width:230px;" src="{{transformations[i]}}">
+              <figcaption>AI Transformed</figcaption>
+            </figure>
+            </div>
+            <div style="text-align:left">
+            <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+
+      <h1> Shoes </h1>
+      <div class="cards-container ">
+        {% for i in range(0, num) %}
+          {% if identities[i] == 2 %}
+          <div class="card card-fixedsize">
+
+            <div style="text-align:center">
+            <h2>{{titles[i]}}</h2>
+            </div>
+            <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
+            <figure>
+              <img style="width:230px;" src="{{urls[i]}}">
+              <figcaption>Original</figcaption>
+            </figure>
+            <figure>
+              <img style="width:230px;" src="{{transformations[i]}}">
+              <figcaption>AI Transformed</figcaption>
+            </figure>
+            </div>
+            <div style="text-align:left">
+            <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
+            </div>
+          </div>
+          {% endif %}
+        {% endfor %}
+      
+   
+</div>
+<form method="GET"  action="{{ url_for('index')}}">
+    <button type="submit">Upload New</button>
+</form>
+    </body>
+    </html>
