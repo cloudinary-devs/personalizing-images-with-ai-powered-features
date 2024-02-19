@@ -7,73 +7,120 @@
     <style>
 
 
-button{
-  
-  margin-left:40px;
-      }
+    button{
+      
+      margin-left:40px;
+          }
 
-    </style>
+        </style>
     </head>
     <body>
-<div>
-    <div>
-    <h1>Cloudinary's computer vision saw:</h1>
-    </div>
+      <div>
+        <div>
+          <h1>Cloudinary's computer vision saw:</h1>
+        </div>
 
-    <h1> People </h1>
-    <div class="cards-container ">
+        {% set categories = {'people': false, 'shoes': false, 'other': false} %}
+
         {% for i in range(0, num) %}
-        {% if identities[i] == 1 %}
-          <div class="card card-fixedsize">
-
-            <div style="text-align:center">
-            <h2>{{titles[i]}}</h2>
-            </div>
-            <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
-            <figure>
-              <img style="width:230px;" src="{{urls[i]}}">
-              <figcaption>Original</figcaption>
-            </figure>
-            <figure>
-              <img style="width:230px;" src="{{transformations[i]}}">
-              <figcaption>AI Transformed</figcaption>
-            </figure>
-            </div>
-            <div style="text-align:left">
-            <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
-            </div>
-          </div>
+          {% if identities[i] == 1 %}
+            {% set _ = categories.update({'people': true}) %}
+          {% elif identities[i] == 2 %}
+            {% set _ = categories.update({'shoes': true}) %}
+          {% else %}
+            {% set _ = categories.update({'other': true}) %}
           {% endif %}
         {% endfor %}
-      </div>
+
+        {% if categories['people'] %}
+        <h1> People </h1>
+        <div class="cards-container ">
+          {% for i in range(0, num) %}
+            {% if identities[i] == 1 %}
+            
+              <div class="card card-fixedsize">
+                
+                <div style="text-align:center">
+                  <h2>{{titles[i]}}</h2>
+                  <h2>{{public_ids[i]}}</h2>
+                </div>
+                <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
+                  <figure>
+                    <img style="width:230px;" src="{{urls[i]}}">
+                    <figcaption>Original</figcaption>
+                  </figure>
+                  <figure>
+                    <img style="width:230px;" src="{{transformations[i]}}">
+                    <figcaption>AI Transformed</figcaption>
+                  </figure>
+                </div>
+                <div style="text-align:left">
+                  <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endif %}
 
 
-      <h1> Shoes </h1>
-      <div class="cards-container ">
-        {% for i in range(0, num) %}
-          {% if identities[i] == 2 %}
-          <div class="card card-fixedsize">
+      {% if categories['shoes'] %}
+        <h1> Shoes </h1>
+        <div class="cards-container ">
+          {% for i in range(0, num) %}
+            {% if identities[i] == 2 %}
+              <div class="card card-fixedsize">
 
-            <div style="text-align:center">
-            <h2>{{titles[i]}}</h2>
-            </div>
-            <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
-            <figure>
-              <img style="width:230px;" src="{{urls[i]}}">
-              <figcaption>Original</figcaption>
-            </figure>
-            <figure>
-              <img style="width:230px;" src="{{transformations[i]}}">
-              <figcaption>AI Transformed</figcaption>
-            </figure>
-            </div>
-            <div style="text-align:left">
-            <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
-            </div>
+                <div style="text-align:center">
+                  <h2>{{titles[i]}}</h2>
+                </div>
+                <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
+                  <figure>
+                    <img style="width:230px;" src="{{urls[i]}}">
+                    <figcaption>Original</figcaption>
+                  </figure>
+                  <figure>
+                    <img style="width:230px;" src="{{transformations[i]}}">
+                    <figcaption>AI Transformed</figcaption>
+                  </figure>
+                </div>
+                <div style="text-align:left">
+                  <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
+                </div>
+              </div>
+              {% endif %}
+            {% endfor %}
           </div>
-          {% endif %}
-        {% endfor %}
-      
+        {% endif %}
+
+        {% if categories['other'] %}
+          <h1> Other </h1>
+          <div class="cards-container ">
+            {% for i in range(0, num) %}
+              {% if identities[i] != 2 and  identities[i] != 1 %}
+                <div class="card card-fixedsize">
+    
+                  <div style="text-align:center">
+                    <h2>{{titles[i]}}</h2>
+                  </div>
+                  <div style="border-style:solid;border-color:gray;margin-left:10px;margin-right:10px;">
+                    <figure>
+                      <img style="width:230px;" src="{{urls[i]}}">
+                      <figcaption>Original</figcaption>
+                    </figure>
+                    <figure>
+                      <img style="width:230px;" src="{{transformations[i]}}">
+                      <figcaption>AI Transformed</figcaption>
+                    </figure>
+                  </div>
+                  <div style="text-align:left">
+                    <p style="margin-left:20px;margin-right:20px;">{{messages[i]}}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
    
 </div>
 <form method="GET"  action="{{ url_for('index')}}">

@@ -11,18 +11,19 @@ app = Flask(__name__, static_url_path='/static')
 @app.route("/", methods=['GET'])
 def index():
     # Create the upload preset only once:
-    cloudinary.api.create_upload_preset(
-      name = "docs_computer_vision_demo",
-      unsigned = True,  
-      use_filename=True,
-      folder="docs/computer_vision_demo",
-      tags="computer_vision_demo",
-      colors= True,
-      faces= True,
-      categorization = "google_tagging", auto_tagging = 0.7,
-      ocr = "adv_ocr",
-      moderation = "aws_rek"
-    )
+    # cloudinary.api.create_upload_preset(
+      #name = "docs_computer_vision_demo",
+      #unsigned = True,  
+      #use_filename=True,
+      #folder="docs/computer_vision_demo",
+      #tags="computer_vision_demo",
+      #colors= True,
+      #faces= True,
+      #categorization = "google_tagging", auto_tagging = 0.7,
+      #ocr = "adv_ocr",
+      #moderation = "aws_rek"
+    #)
+    cloudinary.api.delete_resources_by_tag("computer_vision_demo") 
     return render_template('index.html', failed_upload='')
 
 @app.route("/output", methods=['POST'])
@@ -35,12 +36,14 @@ def output():
     titles = []
     identity = None
     identities = []
-
     for asset in assetList['resources']:
         public_id = asset["public_id"]
         details = cloudinary.api.resource(public_id, faces=True, colors=True)
-
+        
         if details["moderation"][0]["status"] == "approved":
+            public_ids=[]
+            public_ids.append(public_id)
+            print(public_id)
             url = details["secure_url"]
             urls.append(url)
 
@@ -82,16 +85,14 @@ def output():
             
             identity = None
             for x in details["info"]["categorization"]["google_tagging"]["data"]:
-              if 'shirt' in x['tag'] or 'sweater' in x['tag'] or 'shoulder' in x['tag'] or 'sleeve' in x['tag'] or 'Shirt' in x['tag'] or 'Sweater' in x['tag'] or 'Shoulder' in x['tag'] or 'Sleeve' in x['tag']:
+              if 'face' in x['tag'] or 'head' in x['tag'] or 'shirt' in x['tag'] or 'sweater' in x['tag'] or 'shoulder' in x['tag'] or 'sleeve' in x['tag'] or 'Face' in x['tag'] or 'Head' in x['tag'] or 'Shirt' in x['tag'] or 'Sweater' in x['tag'] or 'Shoulder' in x['tag'] or 'Sleeve' in x['tag']:
                 identity = 1
-                identities.append(identity)
                 break
               elif 'shoe' in x['tag'] or 'boot' in x['tag'] or 'footwear' in x['tag'] or 'leg' in x['tag'] or 'Shoe' in x['tag'] or 'Boot' in x['tag'] or 'Footwear' in x['tag'] or 'Leg' in x['tag']:
                 identity = 2   
-                identities.append(identity)
                 break
-
-    return render_template('output.html', identities=identities, num=len(urls), urls=urls, titles=titles, transformations=transformations, messages=messages)
+            identities.append(identity)
+    return render_template('output.html', public_ids=public_ids, identities=identities, num=len(urls), urls=urls, titles=titles, transformations=transformations, messages=messages)
 
 if __name__ == "__main__":
     app.run()
