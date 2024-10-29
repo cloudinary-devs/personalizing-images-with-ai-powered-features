@@ -10,19 +10,26 @@ app = Flask(__name__, static_url_path='/static')
 
 @app.route("/", methods=['GET'])
 def index():
+    '''
     # Create the upload preset only once:
-    # cloudinary.api.create_upload_preset(
-      #name = "docs_computer_vision_demo",
-      #unsigned = True,  
-      #use_filename=True,
-      #folder="docs/computer_vision_demo",
-      #tags="computer_vision_demo",
-      #colors= True,
-      #faces= True,
-      #categorization = "google_tagging", auto_tagging = 0.7,
-      #ocr = "adv_ocr",
-      #moderation = "aws_rek"
-    #)
+    cloudinary.api.create_upload_preset(
+        name = "docs_computer_vision_demo",
+        unsigned = True,  
+        use_filename=True,
+        tags="computer_vision_demo",
+        colors= True,
+        faces= True,
+        categorization = "google_tagging", auto_tagging = 0.7,
+        ocr = "adv_ocr",
+        moderation = "aws_rek"
+    )  
+
+
+    # Upload overlays only once:  
+    cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/v1572554533/iphone.png", public_id='iphone', unique_filename = False, overwrite=True)
+    cloudinary.uploader.upload("https://res.cloudinary.com/demo/image/upload/v1532000565/sunglasses_emoji.png", public_id='sunglasses_emoji', unique_filename = False, overwrite=True) 
+    '''
+    
     cloudinary.api.delete_resources_by_tag("computer_vision_demo") 
     return render_template('index.html', failed_upload='')
 
